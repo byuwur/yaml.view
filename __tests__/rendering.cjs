@@ -53,15 +53,16 @@ test("YAML library", { timeout: 30000 }, async (t) => {
     const result = await page.evaluate(async () => {
       const malformed = await byYAMLviewer(root, "a: [unclosed").ready;
       const tag = await byYAMLviewer(root, 'x: !!js/function "function(){window.injected=1}"').ready;
-      await byYAMLviewer(root, 'x: "<img src=x onerror=window.injected=1>"').ready;
+      const rendered = await byYAMLviewer(root, 'x: "<img src=x onerror=window.injected=1>"').ready;
       return {
+        rendered,
         malformed,
         tag,
         images: root.querySelectorAll("img").length,
         injected: Boolean(window.injected)
       };
     });
-    assert.deepEqual(result, { malformed: false, tag: false, images: 0, injected: false });
+    assert.deepEqual(result, { rendered: true, malformed: false, tag: false, images: 0, injected: false });
   });
 
   await t.test("replacement and disposal respect the current instance", async () => {
