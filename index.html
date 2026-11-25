@@ -875,6 +875,7 @@
       "use strict";
 
       document.addEventListener("DOMContentLoaded", () => {
+        const endScript = "</" + "script>";
         const controlTooltips = [];
         if (window.bootstrap?.Tooltip && typeof window.Popper?.createPopper === "function") {
           document.querySelectorAll('#viewer-options label[data-bs-toggle="tooltip"]').forEach((label) => {
@@ -1038,8 +1039,29 @@
           // Finish the iframe's appearance setup before measuring the initial render.
           debounce = setTimeout(render, 0, null, previewAppearance());
         });
-        frame.srcdoc =
-          '<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="yaml.css"><link rel="stylesheet" href="yaml.themes.css"><style>html,body{margin:0;min-height:100%;}#viewer{min-height:100vh;border:0;}</style><script src="yaml.js"><\/script></head><body><div id="viewer" data-theme="light"></div></body></html>';
+        // prettier-ignore
+        frame.srcdoc = /* HTML */ `<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="yaml.css">
+    <link rel="stylesheet" href="yaml.themes.css">
+    <style>
+      html, body {
+        margin: 0;
+        min-height: 100%;
+      }
+      #viewer {
+        min-height: 100vh;
+        border: 0;
+      }
+    </style>
+    ${`<script src="yaml.js">${endScript}`}
+  </head>
+  <body>
+    <div id="viewer" data-theme="light"></div>
+  </body>
+</html>`;
         source.addEventListener("input", () => {
           ++sourceVersion;
           clearTimeout(debounce);
@@ -1119,21 +1141,7 @@
           setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
 
-        function renderIntegration(title, assets, body) {
-          const html = [
-            "<!doctype html>",
-            '<html lang="en">',
-            "  <head>",
-            '    <meta charset="UTF-8">',
-            '    <meta name="viewport" content="width=device-width, initial-scale=1">',
-            `    <title>${title}</title>`,
-            ...assets,
-            "  </head>",
-            "  <body>",
-            ...body,
-            "  </body>",
-            "</html>"
-          ].join("\n");
+        function renderIntegration(html) {
           if (html === integrationHTML) return;
           integrationHTML = html;
           if (typeof window.byCODEviewer === "function") {
@@ -1151,23 +1159,29 @@
           const cdn = mode === "cdn";
           const base = cdn ? "https://cdn.jsdelivr.net/gh/byuwur/yaml.view@latest/" : "";
           const min = cdn ? ".min" : "";
-          const endScript = "</" + "script>";
-          renderIntegration(
-            "YAML.view",
-            [`    <link rel="stylesheet" href="${base}yaml${min}.css">`, `    <script src="${base}yaml${min}.js" defer>${endScript}`],
-            [
-              '    <div id="viewer" data-theme="light"></div>',
-              "    <script>",
-              '      document.addEventListener("DOMContentLoaded", () => {',
-              "        byYAMLviewer(",
-              '          document.getElementById("viewer"),',
-              `          ${jsString(initialSource)},`,
-              `          ${JSON.stringify(defaults, null, 2).replaceAll("\n", "\n          ")}`,
-              "        );",
-              "      });",
-              `    ${endScript}`
-            ]
-          );
+          // prettier-ignore
+          renderIntegration(/* HTML */ `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>YAML.view</title>
+    <link rel="stylesheet" href="${base}yaml${min}.css">
+    ${`<script src="${base}yaml${min}.js" defer>${endScript}`}
+  </head>
+  <body>
+    <div id="viewer" data-theme="light"></div>
+    ${`<script>
+      document.addEventListener("DOMContentLoaded", () => {
+        byYAMLviewer(
+          document.getElementById("viewer"),
+          ${jsString(initialSource)},
+          ${JSON.stringify(defaults, null, 2).replaceAll("\n", "\n          ")}
+        );
+      });
+    ${endScript}`}
+  </body>
+</html>`);
           document.getElementById("install-note").textContent = cdn ? "CDN follows the latest release; updates may take time to reach caches." : "Place the HTML beside yaml.js and yaml.css.";
           installButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.install === mode)));
           document.getElementById("export-status").textContent = "";
