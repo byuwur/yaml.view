@@ -673,10 +673,10 @@
         border-color: var(--accent-text);
       }
       .form-check-input:checked[type="checkbox"] {
-        --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23212529' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+        --bs-form-check-bg-image: url('data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"%3e%3cpath fill="none" stroke="%23212529" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="m6 10 3 3 6-6"/%3e%3c/svg%3e');
       }
       .form-switch .form-check-input:checked {
-        --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23212529'/%3e%3c/svg%3e");
+        --bs-form-switch-bg: url('data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 8 8"%3e%3ccircle r="3" fill="%23212529"/%3e%3c/svg%3e');
       }
       .form-check-input:focus,
       .form-select:focus,
@@ -1657,7 +1657,7 @@
                 // GA4 needs an HTTPS document. Drop the parent URL parameters before running the tag.
                 doc.open();
                 owner.contentWindow.history.replaceState(null, "", "/");
-                doc.write("<!doctype html>" + frameTemplate.innerHTML);
+                doc.write(/* HTML */ `<!doctype html>${frameTemplate.innerHTML}`);
                 doc.close();
               } catch {
                 stop(false);
@@ -1678,7 +1678,7 @@
               script.src = "https://www.googletagmanager.com/gtag/js?id=" + measurement;
               owner.contentDocument.head.append(script);
             };
-            owner.srcdoc = "<!doctype html>";
+            owner.srcdoc = /* HTML */ `<!doctype html>`;
             document.body.append(owner);
           }
           if (frameReady) frame.contentWindow[disable] = false;

@@ -22,7 +22,10 @@ test("YAML library", { timeout: 30000 }, async (t) => {
   // Load authored files directly; CDN availability is not part of this contract.
   await page.route("**/*", (route) => route.abort());
   // ===== BROWSER FIXTURE =====
-  await page.setContent('<!doctype html><meta charset="UTF-8"><div id="viewer"></div>');
+  await page.setContent(
+    /* HTML */ `<!doctype html><meta charset="UTF-8" />
+      <div id="viewer"></div>`
+  );
   await page.addStyleTag({ path: path.join(__dirname, "../yaml.css") });
   await page.addScriptTag({ path: path.join(__dirname, "../yaml.js") });
   await page.evaluate(() => {
