@@ -1010,7 +1010,7 @@
             const target = win.document.getElementById("viewer");
             const options = readOptions();
             const started = performance.now();
-            viewer = win.byYAMLviewer(target, source.value, { ...options, ...appearance });
+            viewer = win.byYAMLviewer(target, source.value, { ...options, ...appearance, sourceType: "text" });
             const ready = viewer.ready;
             const result = await ready;
             if (version !== renderVersion || ready !== viewer.ready) return;

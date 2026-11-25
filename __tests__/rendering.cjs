@@ -79,5 +79,21 @@ test("YAML library", { timeout: 30000 }, async (t) => {
     assert.deepEqual(result, { ready: true, preserved: true, empty: true });
   });
 
+  await t.test("loads a source URL through the public API", async () => {
+    const url = "https://files.test/sample";
+    await page.route(url, (route) =>
+      route.fulfill({
+        contentType: "text/plain",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        body: "name: yaml-file"
+      })
+    );
+    const displayed = await page.evaluate(async (url) => {
+      const viewer = byYAMLviewer(root, url);
+      return (await viewer.ready) && root.textContent;
+    }, url);
+    assert.match(displayed, /yaml-file/);
+  });
+
   assert.deepEqual(errors, [], "No uncaught browser errors");
 });

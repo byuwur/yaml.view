@@ -60,6 +60,15 @@ Open [index.html](index.html) locally. Its host assets use the network. Exported
 
 `byYAMLviewer(element, yaml?, options?)` accepts text; omitted input uses the target's text. Empty/comment-only streams display an empty state. Invalid input displays a parser error and resolves `ready` false.
 
+A source string beginning with `https://`, `http://`, `/`, `./`, or `../` and containing no whitespace loads a file. Use `{ url: "example.yaml" }` for a bare filename. To display a URL string literally, pass `{ sourceType: "text" }` in the options.
+
+```javascript
+const viewer = byYAMLviewer(target, "./example.yaml");
+await viewer.ready;
+```
+
+Relative URLs resolve against the page. Cross-origin files require CORS. A failed or superseded load resolves `ready` to `false`.
+
 `byYAMLviewer.parse(yaml)` synchronously returns an array of document values. Mappings are native `Map` objects, sequences are arrays, and scalars use core-schema string/number/boolean/null values. Multiple `---` documents, anchors, aliases, merge keys, block/folded scalars, flow collections, and explicit core tags are supported. Repeated object aliases retain identity, including cycles. Unknown/custom tags and duplicate mapping keys are rejected. Thrown errors include parser errors, `TypeError`, and `RangeError`.
 
 Timestamps remain strings. Numbers use JavaScript precision; quote large integers to preserve every digit. YAML 1.1 binary, ordered-map, and set tags are disabled. The tree omits comments, anchor names, quote styles, and source formatting.
