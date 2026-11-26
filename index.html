@@ -632,6 +632,20 @@
       .nav-link i {
         font-size: 0.875rem;
       }
+      .copy-button {
+        white-space: nowrap;
+      }
+      .copy-button > span {
+        display: inline-grid;
+      }
+      .copy-button > span::after {
+        content: "Copied!";
+        height: 0;
+        visibility: hidden;
+      }
+      #copy-html > span::after {
+        content: "Copy HTML";
+      }
       .btn-accent {
         --bs-btn-bg: var(--accent);
         --bs-btn-color: var(--accent-ink);
