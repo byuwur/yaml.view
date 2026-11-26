@@ -230,7 +230,6 @@
   opacity: 1;
 }
 .byYAMLdocument.byVIEWcompact > .byVIEWtoolbar .byVIEWinfo {
-  flex: 1 1 auto;
   text-align: left;
 }
 .byYAMLdocument > .byVIEWtoolbar .byVIEWinfo a {
@@ -249,6 +248,14 @@
   gap: 0.375em;
   margin-left: auto;
   max-width: 100%;
+}
+.byYAMLdocument > .byVIEWtoolbar .byVIEWcontrols:has(.byVIEWcopySlot) {
+  width: 100%;
+}
+.byYAMLdocument.byVIEWcompact > .byVIEWtoolbar .byVIEWcontrols:has(.byVIEWcopySlot) {
+  /* Wrap the controls as a group independently of the hovered caption. */
+  flex: 1 1 16em;
+  width: auto;
 }
 .byYAMLdocument > .byVIEWtoolbar button {
   flex-shrink: 0;
@@ -288,12 +295,25 @@
   border: 0;
   border-radius: 0.375em;
 }
+.byYAMLdocument > .byVIEWtoolbar .byVIEWcopySlot {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1 1 0;
+  /* Leave room for the icon and "Copied!" when the controls wrap. */
+  min-width: min(100%, calc(7ch + 2.5em));
+  max-width: max-content;
+}
 .byYAMLdocument > .byVIEWtoolbar .byVIEWcopy {
   display: inline-flex;
   align-items: center;
   gap: 0.25em;
+  max-width: 100%;
+}
+.byYAMLdocument > .byVIEWtoolbar .byVIEWcopy span {
+  white-space: nowrap;
 }
 .byYAMLdocument > .byVIEWtoolbar .byVIEWcopy svg {
+  flex: none;
   width: 1em;
   height: 1em;
   fill: currentColor;
